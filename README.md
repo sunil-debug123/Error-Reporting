@@ -38,19 +38,4 @@ Configuration
   * To disable this module for the Production (Prod) and Live sites, navigate to
     /admin/config/system/error-reporting. Here, disable the module and clear the
     cache to ensure that the debugger is deactivated on your live sites
-
-MAINTAINERS
------------
-This module is actively maintained by a dedicated team 
-of developers. If you have any questions, concerns, or issues, 
-feel free to reach out to our maintainers.
-
- * Sunil kumar
-    * Drupal.org Profile: https://www.drupal.org/u/sunil_lnwebworks
- * Shikha Dawar
-    * Drupal.org Profile: https://www.drupal.org/u/shikha_lnweb
- * Pankaj kumar
-    * Drupal.org Profile: https://www.drupal.org/u/pankaj_lnweb
- * Gurinderpal Singh
-    * Drupal.org Profile: https://www.drupal.org/u/gurinderpal-lnwebworks
  
