@@ -1,0 +1,263 @@
+{#
+/**
+ * @file
+ * Drupal Twig Template for Error Page.
+ *
+ * This template is used to display error details, including stack trace,
+ * server information, request details, cookies, session, and app information.
+ *
+ * Available variables:
+ * - data: An array containing error data, including exception type, message,
+ *   and trace information.
+ * - drupal_version: The version of Drupal.
+ * - php_version: The version of PHP.
+ * - content: A list of content items. Use 'content' to print all content.
+ *
+ * Included JS Variables:
+ * - code_list: An array containing stack trace information for highlighting lines.
+ *
+ * @see template_preprocess()
+ */
+#}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ data.exception_type }}</title>
+
+    <!-- Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/default.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/styles/atom-one-light.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/TRSasasusu/highlightjs-highlight-lines.js@1.1.5/highlightjs-highlight-lines.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- DOMPurify -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.2.9/dist/purify.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ data.css }}" />
+
+    <!-- Twig-generated JavaScript -->
+    <script>
+        const code_list = [
+            {% for stack in data.trace %}
+            {
+                line: {{ stack.line }},
+                file: `{{ stack.file|e }}`,
+                content: `{{ stack.content|e('js') }}`
+            },
+            {% endfor %}
+        ];
+    </script>
+</head>
+
+<body>
+    <div class="container cool-error">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-right">
+                            <i class="fab fa-drupal fa-lg" style="color: #0077c0;"></i>
+                            <span>Drupal: {{drupal_version}}</span>, &nbsp
+                            <i class="fab fa-php fa-lg" style="color: #4F5D95;"></i>
+                            <span>PHP: {{php_version}}</span>
+                        </div>
+
+                        <h2>
+                            <span class="badge bg-light text-light-color">{{data.exception_type}}</span>
+                        </h2>
+                        <b>{{data.message}}</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <div class="card max-height">
+                    <div class="card-body">
+                        <ul class="list-group list-group-light">
+                            {% for idx, traceItem in data.trace %}
+                            <li
+                                data-idx="{{ idx }}"
+                                onclick="loadFunc(this, {{ idx }})"
+                                class="list-group-item text-dark text_line_item {{ idx == 0 ? 'active_button' : '' }}">
+                                {{ traceItem.function }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="" id="" style="font-size: 15px; background: white">
+                    <pre id="file_path"></pre>
+                    <pre class="content"><code class="max-height language-php" id="code_content"></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2" id="sidebar">
+                <ul class="list-group list-group-light">
+
+                    <a href="#server_content" id="server_content_link">
+                        <li class="list-group-item transparent ">
+                            <i class="fas fa-server"></i> &nbsp Server
+                        </li>
+                    </a>
+
+                    <a href="#request_content" id="request_content_link">
+                        <li class="list-group-item transparent">
+                            <i class="fas fa-exchange-alt"></i> &nbsp Request
+                        </li>
+                    </a>
+
+                    <a href="#cookies_content" id="cookies_content_link">
+                        <li class="list-group-item transparent">
+                            <i class="fas fa-cookie"></i> &nbsp Cookies
+                        </li>
+                    </a>
+
+                    <a href="#session_content" id="session_content_link">
+                        <li class="list-group-item transparent"><i class="fas fa-database"></i> &nbsp Session
+                        </li>
+                    </a>
+                    <a href="#app_content" id="app_content_link">
+                        <li class="list-group-item transparent">
+                            <i class="fas fa-rocket"></i> &nbsp App
+                        </li>
+                    </a>
+                </ul>
+            </div>
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="card-inner" id="server_content">
+                            <h1><i class="fas fa-server"></i> &nbsp Server</h1>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        {% if data.server %}
+                                        {% for key, item in data.server %}
+                                        {% if item %}
+                                        <tr>
+                                            <td>{{ key }}</td>
+                                            <td>{{ item }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-inner" id="request_content">
+                            <h1><i class="fas fa-exchange-alt"></i> &nbsp Request</h1>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Method</td>
+                                            <td>{{data.server['REQUEST_METHOD'] ?? null}}</td>
+                                        </tr>
+                                        
+                                        {% for key, item in data.request %}
+                                        <tr>
+                                            <td>{{ key }}</td>
+                                            <td>{% if item %}{{ item }}{% else %}[ ]{% endif %}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-inner" id="cookies_content">
+                            <h1><i class="fas fa-cookie"></i> &nbsp Cookies</h1>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        {% if data.cookie %}
+                                        {% for key, item in data.cookie %}
+                                        <tr>
+                                            <td>{{ key }}</td>
+                                            <td>{% if item %}{{ item }}{% else %}[ ]{% endif %}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <tr><td colspan="2">No Cookies available.</td></tr>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-inner" id="session_content">
+                            <h1><i class="fas fa-database"></i> &nbsp Session</h1>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        {% if data.session %}
+                                        {% for key, item in data.session %}
+                                        <tr>
+                                            <td>{{ key }}</td>
+                                            <td>{% if item %}{{ item }}{% else %}[ ]{% endif %}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                        <tr>
+                                            <tr><td colspan="2">No Session available.</td></tr>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-inner" id="app_content">
+                            <h1><i class="fas fa-rocket"></i> &nbsp App</h1>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Drupal Version</td>
+                                            <td>{{drupal_version}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>PHP Version</td>
+                                            <td>{{php_version}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a id="button_up"></a>
+
+    <!-- Include JS Here -->
+    <script src={{data.js}} defer></script>
+</body>
+
+</html>

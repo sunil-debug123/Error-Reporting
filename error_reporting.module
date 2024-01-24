@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains custom error display functionality.
+ */
+
+use Drupal\error_reporting\Controller\ErrorController;
+use Symfony\Component\HttpFoundation\Response;
+
+// Set a custom exception handler.
+set_exception_handler('error_reporting_exception_handler');
+
+/**
+ * Custom exception handler function.
+ */
+function error_reporting_exception_handler(\Throwable $exception) {
+  // Get the container.
+  $container = \Drupal::getContainer();
+
+  // Get the config service.
+  $config = $container->get('config.factory')->get('error_reporting.settings')->get('enable_error_reporting');
+
+  // If custom error reporting is disabled, let Drupal handle the exception.
+  if (!$config) {
+    // Create a Symfony Response object with a 500 status code and send it.
+    $response = new Response('The website encountered an unexpected error. Please try again later.', Response::HTTP_INTERNAL_SERVER_ERROR);
+    $response->send();
+    return;
+  }
+
+  // Get the renderer service.
+  $renderer = $container->get('renderer');
+
+  // Get the error controller.
+  $errorController = new ErrorController($renderer);
+
+  // Handle the error.
+  return $errorController->handler($exception);
+}
+
+/**
+ * Implements hook_theme().
+ */
+function error_reporting_theme() {
+  return [
+    'custom_error_display' => [
+      'template' => 'custom-error-display',
+      'variables' => [
+        'data' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for templates.
+ */
+function error_reporting_preprocess_custom_error_display(&$variables) {
+  // Get the Drupal version.
+  $variables['drupal_version'] = \Drupal::VERSION;
+  // Get the PHP version.
+  $variables['php_version'] = constant('PHP_VERSION');
+}

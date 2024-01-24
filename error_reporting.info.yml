@@ -1,0 +1,5 @@
+name: Error Reporting
+type: module
+description: Improves Drupal's error reporting for better debugging and issue resolution.
+package: Tools and Utilities
+core_version_requirement: ^8.8 || ^9 || ^10

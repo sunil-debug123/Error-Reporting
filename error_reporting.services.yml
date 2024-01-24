@@ -1,0 +1,6 @@
+services:
+  error_reporting.exception_subscriber:
+    class: Drupal\error_reporting\EventSubscriber\ExceptionSubscriber
+    arguments: ['@renderer', '@config.factory']
+    tags:
+      - { name: 'event_subscriber' }

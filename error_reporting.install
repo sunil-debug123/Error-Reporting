@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the error_reporting module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Enables error reporting configuration when the module is installed.
+ */
+function error_reporting_install() {
+  // Get the configuration service.
+  $config = \Drupal::configFactory();
+
+  // Get the 'error_reporting.settings' configuration.
+  $error_reporting_config = $config->getEditable('error_reporting.settings');
+
+  // Set the 'enable_error_reporting' configuration value to TRUE.
+  // Check if the configuration already exists and is not set to TRUE.
+  if (!$error_reporting_config->isNew() && !$error_reporting_config->get('enable_error_reporting')) {
+    // Set the 'enable_error_reporting' configuration value to TRUE.
+    $error_reporting_config->set('enable_error_reporting', TRUE)->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Disable error reporting configuration for the module.
+ */
+function error_reporting_uninstall() {
+  // Get the configuration service.
+  $config = \Drupal::configFactory();
+
+  // Set the 'enable_error_reporting' configuration value to FALSE.
+  $config->getEditable('error_reporting.settings')
+    ->set('enable_error_reporting', FALSE)
+    ->save();
+}

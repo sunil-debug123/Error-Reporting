@@ -1,0 +1,7 @@
+error_reporting.config_form:
+  path: '/admin/config/system/error-reporting'
+  defaults:
+    _form: '\Drupal\error_reporting\Form\ErrorReportingConfigForm'
+    _title: 'Error Reporting Settings'
+  requirements:
+    _permission: 'administer site configuration'

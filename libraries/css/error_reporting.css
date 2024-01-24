@@ -1,0 +1,151 @@
+.text-light-color {
+    color: #1f2937;
+  }
+  body {
+    background: #e5e7eb;
+  }
+  .hljs {
+    background-color: white;
+  }
+  .highlight-line {
+    margin-bottom: 2px;
+  }
+  .max-height {
+    max-height: 800px;
+    min-height: 800px;
+    overflow: hidden;
+  }
+  .row > * {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+  .card {
+    border-radius: unset;
+  }
+  html {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+  }
+  /* Optional: show position indicator in red */
+  ::-webkit-scrollbar-thumb {
+  }
+
+  .list-group-item-action:focus {
+    color: unset;
+    background-color: #ef4444;
+  }
+  .active_button {
+    background-color: #ef4444;
+    color: white !important;
+  }
+  .list-group-light > .list-group-item {
+    border-width: 0 0 2px;
+    cursor: pointer;
+  }
+  .transparent {
+    background-color: transparent;
+  }
+  .list-group-light .list-group-item.transparent {
+    border: 2px solid transparent;
+  }
+  .card-inner {
+    margin-bottom: 4rem;
+  }
+  .list-group-item.transparent a {
+    color: #1f2937;
+  }
+
+  .list-group.list-group-light {
+    border-radius: unset;
+    font-size: 14px;
+  }
+  #sidebar {
+    position: sticky;
+    height: calc(100vh - 40px);
+    top: 40px;
+    left: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+ a.active_link li {
+    color: #ef4444;
+  }
+  .cool-error pre.sf-dump, pre.sf-dump .sf-dump-default {
+    background-color: white !important;
+  }
+  .text_line_item {
+    padding: 15px !important;
+  }
+
+  #button_up {
+display: inline-block;
+background-color: #ef4446;
+width: 50px;
+height: 50px;
+text-align: center;
+border-radius: 4px;
+position: fixed;
+bottom: 30px;
+right: 30px;
+transition: background-color .3s, 
+opacity .5s, visibility .5s;
+opacity: 0;
+visibility: hidden;
+z-index: 1000;
+}
+#button_up::after {
+content: "\f077";
+font-family: FontAwesome;
+font-weight: normal;
+font-style: normal;
+font-size: 2em;
+line-height: 50px;
+color: #fff;
+}
+#button_up:hover {
+cursor: pointer;
+background-color: #333;
+}
+#button_up:active {
+background-color: #555;
+}
+#button_up.show {
+opacity: 1;
+visibility: visible;
+}
+.text-right {
+text-align: right;
+}
+
+.highlighted-line {
+    background-color: rgba(255, 0, 0, 0.4);
+}
+
+#file_path {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 10px;
+}
+
+.path-segment {
+  color: #0366d6;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.path-segment i {
+  margin-right: 5px;
+}
+
+.path-separator {
+  color: #888;
+  margin: 0 5px;
+}
+
+.content {
+  max-height: 743px;
+  overflow: auto;
+}
